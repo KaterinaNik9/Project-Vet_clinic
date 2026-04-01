@@ -1,280 +1,172 @@
-﻿#include <iostream>
+#include <iostream>
+#include <memory>
 #include <string>
-#include "Header.h"
+#include <limits>
+#include <vector>
+
+#include "AnimalHospital.h"
+#include "Dog.h"
+#include "Cat.h"
+#include "Bird.h"
+#include "Reptile.h"
+#include "ExoticAnimal.h"
+#include "MedicalRecord.h"
+#include "Vaccination.h"
+#include "Surgery.h"
+#include "Medication.h"
+#include "Examination.h"
+
 using namespace std;
-//megabank /
-//├── main.cpp - точка входа, демонстрация работы
-//├── exceptions.h - иерархия исключений
-//├── account.h / .cpp - абстрактный базовый класс Account
-//├── savings.h / .cpp - класс SavingsAccount
-//├── credit.h / .cpp - класс CreditAccount
-//├── deposit.h / .cpp - класс DepositAccount
-//├── bank.h / .cpp - класс Bank(вложенные классы Config, Statistics)
-//├── structures.h - шаблонные Stack, Queue, PriorityQueue
-//├── auditor.h - класс Auditor
-//└── ui.h - вспомогательные функции вывода
 
-class BankException : public std::exception
+void clearInput() 
 {
-protected:
-    string message;
-public:
-    explicit BankException(const string& _message): message(_message){}
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
-    const string& get_message() const { return message; }
-
-    const char* what() const noexcept override
-    {
-        return message.c_str();
-    }
-};
-
-class InsufficientFundsEx : public BankException
+void showMainMenu() 
 {
-    explicit InsufficientFundsEx(const string& _message) : BankException(_message) {}
+    cout << "1. Регистрация нового пациента" << endl;
+    cout << "2. Список всех пациентов" << endl;
+    cout << "3. Работа с медицинской картой" << endl;
+    cout << "4. Запланировать визит" << endl;
+    cout << "5. График приемов" << endl;
+    cout << "6. Удалить запись" << endl;
+    cout << "0. Выход" << endl;
+    cout << "Выбор: ";
+}
 
-    explicit InsufficientFundsEx(int accountId, double requested, double available)
-        : BankException("Недостаточно средств на счете " + std::to_string(accountId) + ": запрошено " + std::to_string(requested) +
-            ", доступно " + std::to_string(available)) {}
-};
-
-class NegativeAmountEx : public BankException
+int main() 
 {
-    explicit NegativeAmountEx(const string& _message) : BankException(_message) {}
+    AnimalHospital hospital;
+    int mainChoice = -1;
 
-    explicit NegativeAmountEx(int amount)
-        : BankException("Недоступное цисло: " + std::to_string(amount) +
-            ". Оно должно быть положительным.") {}
-};
-
-class AccountNotFoundEx : public BankException
-{
-    explicit AccountNotFoundEx(const string& _message) : BankException(_message) {}
-
-    explicit AccountNotFoundEx(int accountId)
-        : BankException("Предоставленный ID: " + std::to_string(accountId) + "не найден") {
-    }
-};
-
-class DuplicateAccountEx : public BankException
-{
-    explicit DuplicateAccountEx(const string& _message) :BankException(_message) {}
-
-    explicit DuplicateAccountEx(int accountId)
-        : BankException("Предоставленный ID: " + std::to_string(accountId) + "уже существует") {
-    }
-};
-
-
-struct Transaction
-{
-    double amount;
-    string timestamp;
-    string counterparty;
-    string type;
-
-    explicit Transaction(double _amount = 0.0, const string& _timestamp, const string& _counterparty, const string& _type)
-        : amount(_amount), timestamp(_timestamp), counterparty(_counterparty), type(_type) {}
-    string toString() const
+    while (mainChoice != 0) 
     {
-        if (type == "deposit")
+        showMainMenu();
+        cin >> mainChoice;
+        clearInput();
+
+        if (mainChoice == 1) 
         {
-            cout << "[" << timestamp << "] ПОПОЛНЕНИЕ: +" << amount << " руб.";
+            int type, id, age;
+            string name, breed, date;
+
+            cout << "Тип (1-Dog, 2-Cat, 3-Bird, 4-Reptile, 5-Exotic): ";
+            cin >> type;
+            clearInput();
+
+            cout << "ID: "; cin >> id; clearInput();
+            cout << "Кличка: "; getline(cin, name);
+            cout << "Порода: "; getline(cin, breed);
+            cout << "Возраст: "; cin >> age; clearInput();
+            cout << "Дата: "; getline(cin, date);
+
+            shared_ptr<Animal> newAnimal = nullptr;
+
+            if (type == 1) newAnimal = make_shared<Dog>(id, name, breed, age, date, true);
+            else if (type == 2) newAnimal = make_shared<Cat>(id, name, breed, age, date, true);
+            else if (type == 3) newAnimal = make_shared<Bird>(id, name, breed, age, date, 30.0, true);
+            else if (type == 4) newAnimal = make_shared<Reptile>(id, name, breed, age, date, "Террариум");
+            else if (type == 5) newAnimal = make_shared<ExoticAnimal>(id, name, "Экзот", breed, age, date, "Неизвестно", "NONE");
+
+            if (newAnimal) 
+            {
+                hospital.addAnimal(newAnimal);
+                
+                cout << "Требуется ли немедленное лечение? (1-Да, 0-Нет): ";
+                int needTreatment;
+                cin >> needTreatment;
+                clearInput();
+
+                if (needTreatment == 1) 
+                {
+                    string diag;
+                    cout << "Предварительный диагноз: ";
+                    getline(cin, diag);
+                    MedicalRecord initialRecord(date, diag, "Требуется дообследование");
+                    initialRecord.setIsActive(true);
+                    newAnimal->addMedicalRecord(initialRecord);
+                }
+            }
         }
-
-        if (type == "withdraw")
+        else if (mainChoice == 2) 
         {
-            cout << "[" << timestamp << "] СНЯТИЕ: -" << amount << " руб.";
+            hospital.printAllAnimals();
         }
-
-        if (type == "transfer_in")
+        else if (mainChoice == 3) 
         {
-            cout << "[" << timestamp << "] ПЕРЕВОД (входящий): +" << amount << " руб." << "Отправитель: " << counterparty;
+            int id;
+            cout << "ID пациента: ";
+            cin >> id;
+            clearInput();
+
+            auto animal = hospital.findAnimalById(id);
+            if (animal) 
+            {
+                cout << "Состояние: 1.Здоров (закрыть карту), 2.Болен (назначить процедуру): ";
+                int status;
+                cin >> status;
+                clearInput();
+
+                if (status == 1) 
+                {
+                    MedicalRecord healthyRecord("2026-04-01", "Здоров", "Осмотрен, жалоб нет");
+                    healthyRecord.setIsActive(false);
+                    animal->addMedicalRecord(healthyRecord);
+                    cout << "Статус обновлен: Здоров" << endl;
+                }
+                else 
+                {
+                    string diag, desc;
+                    cout << "Диагноз: "; getline(cin, diag);
+                    cout << "План лечения: "; getline(cin, desc);
+
+                    MedicalRecord record("2026-04-01", diag, desc);
+                    record.setIsActive(true);
+
+                    cout << "Назначить процедуру? (1-Вакцина, 2-Операция, 3-Препарат, 4-Осмотр, 0-Нет): ";
+                    int tType;
+                    cin >> tType;
+                    clearInput();
+
+                    if (tType == 1) record.addTreatment(make_shared<Vaccination>("Вакцинация", "2026-04-01", 1000, "Биокан", "2027-01-01"));
+                    else if (tType == 2) record.addTreatment(make_shared<Surgery>("Операция", "2026-04-01", 7000, "Срочная", "Высокий"));
+                    else if (tType == 3) record.addTreatment(make_shared<Medication>("Курс лекарств", "2026-04-01", 500, "Антибиотик", "1т/2р в день", 7));
+                    else if (tType == 4) record.addTreatment(make_shared<Examination>("Осмотр", "2026-04-01", 400, "Норма", "Без патологий"));
+
+                    animal->addMedicalRecord(record);
+                }
+            }
         }
-
-        if (type == "transfer_out")
+        else if (mainChoice == 4) 
         {
-            cout << "[" << timestamp << "] ПЕРЕВОД (исходящий): -" << amount << " руб." << "Получатель: " << counterparty;
+            int id;
+            cout << "ID пациента: "; cin >> id; clearInput();
+            auto animal = hospital.findAnimalById(id);
+            
+            if (animal) 
+            {
+                string vet, d, t, r;
+                cout << "Врач: "; getline(cin, vet);
+                cout << "Дата: "; getline(cin, d);
+                cout << "Время: "; getline(cin, t);
+                cout << "Причина: "; getline(cin, r);
+
+                hospital.createAppointment(animal, vet, d, t, r);
+            }
         }
-
-        if (type == "open")
+        else if (mainChoice == 5) 
         {
-            cout << "[" << timestamp << "]ОТКРЫТИЕ СЧЁТА: начальный баланс +" << amount << " руб.";
+            hospital.printSchedule();
         }
-
-        if (type == "interest")
+        else if (mainChoice == 6) 
         {
-            cout << "[" << timestamp << "] НАЧИСЛЕНИЕ ПРОЦЕНТОВ: +" << amount << " руб.";
-        }
-
-        if (type == "close")
-        {
-            cout << "[" << timestamp << "] ЗАКРЫТИЕ СЧЁТА: остаток выведен -" << amount << " руб.";
-        }
-        
-        return timestamp;
-    }
-};
-
-class Account
-{
-private:
-    int id;
-    static int totalAccounts;
-    static double totalMoneyInSystem;
-
-protected:
-    string ownerName;
-    double balance;
-    string currency;
-    Stack<Transaction> history;
-
-public:
-    Account(int _id, const string& _ownerName, double _balance = 0.0, string _currency = "RUB") 
-        : id(_id), ownerName(_ownerName), balance(_balance), currency(_currency) 
-    {
-        totalAccounts++;
-        totalMoneyInSystem += balance;
-    }
-    Account() {}
-    Account(const Account& other) : id(id + other.id), ownerName(other.ownerName),balance(other.balance), currency(other.currency)
-    {
-        totalAccounts++;
-        totalMoneyInSystem += balance;
-    }
-    virtual ~Account() 
-    {
-        totalAccounts--;
-        totalMoneyInSystem -= balance;
-    }
-
-
-    int getId() const 
-    {
-        return id;
-    }
-
-    string getOwner() const
-    {
-        return ownerName;
-    }
-
-    int getBalance() const
-    {
-        return balance;
-    }
-
-    string getCurrency() const
-    {
-        return currency;
-    }
-
-
-    void setOwner(const string& name) 
-    {
-        this->ownerName = ownerName;
-    }
-
-    void addHistory(const Transaction& transaction)
-    {
-        history.push(transaction);
-    }
-
-
-    string printHistory()
-    {
-        if (history.isEmpty())
-        {
-            cout << "История транзакций пуста" << endl;
-        }
-        if (!history.isEmpty())
-        {
-            cout << history.pop().toString() <<endl;
+            int id;
+            cout << "ID для удаления: ";
+            cin >> id;
+            hospital.removeAnimal(id);
         }
     }
 
-    virtual void deposit(double amount) = 0;
-    virtual void withdraw(double amount) = 0;
-    virtual std::string getType() const = 0;
-    virtual double getAvailable() const = 0;
-    virtual void printInfo() const
-    {
-        cout << "Тип счёта: " << getType() << std::endl;
-        cout << "ID: " << id << std::endl;
-        cout << "Владелец: " << ownerName << std::endl;
-        cout << "Баланс: " << balance << " " << currency << std::endl;
-        cout << "Доступно для снятия: " << getAvailable() << " " << currency << std::endl;
-        
-    }
-
-    int getTotalAccounts()
-    {
-        return totalAccounts;
-    }
-
-    double getTotalMoneyInSystem()
-    {
-        return totalMoneyInSystem;
-    }
-
-    bool operator==(const Account& other) const;
-    bool operator!=(const Account& other) const;
-    bool operator<(const Account& other) const;
-    Account& operator+=(double amount);
-    Account& operator-=(double amount);
-    static friend ostream& operator<<(std::ostream& os, const Account& account);
-};
-
-
-
-
-int Account::getTotalAccounts() {
-    
+    return 0;
 }
-
-double Account::getTotalMoneyInSystem() {
-    return totalMoneyInSystem;
-}
-
-// Перегруженные операторы
-bool Account::operator==(const Account& other) const 
-{
-    return id == other.id;
-}
-
-bool Account::operator!=(const Account& other) const 
-{
-    return !(*this == other);
-}
-
-bool Account::operator<(const Account& other) const 
-{
-    return balance < other.balance;
-}
-
-Account& Account::operator+=(double amount) 
-{
-    deposit(amount);
-    return *this;
-}
-
-Account& Account::operator-=(double amount) 
-{
-    withdraw(amount);
-    return *this;
-}
-
-ostream& operator<<(std::ostream& os, const Account& account)
-{
-    os << "[" << account.getType() << "|" << account.id << "] " << account.ownerName << " : " << account.balance << " " << account.currency;
-    return os;
-}
-
-
-//    Дружественные классы : Auditor, Bank
-
-int main()
-{
-    std::cout << "Hello World!\n";
-}
-
