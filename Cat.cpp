@@ -1,29 +1,48 @@
 #include "Cat.h"
 #include <iostream>
+
 using namespace std;
 
-Cat::Cat(int id, const string& name, const string& breed, int age, const string& admissionDate, bool isLitterTrained)
-    : Animal(id, name, "Cat", breed, age, admissionDate), isLitterTrained(isLitterTrained) {} // проблема с isLitterTrained
+Cat::Cat(
+    int id, 
+    const string& name, 
+    const string& breed, 
+    int age, 
+    const string& admissionDate, 
+    bool isLitterTrained
+)
+    : Animal(
+        id, 
+        name, 
+        "Cat", 
+        breed, 
+        age, 
+        admissionDate
+    ), 
+      isLitterTrained(isLitterTrained) 
+{
+}
 
 string Cat::getFeedSchedule() const 
 {
     if (age < 1) 
     {
-        return "Кормить 3-4 раза в день кормом для котенков";
+        return "РљРѕСЂРјРёС‚СЊ 3-4 СЂР°Р·Р° РІ РґРµРЅСЊ РєРѕСЂРјРѕРј РґР»СЏ РєРѕС‚СЏС‚";
     }
     else 
     {
-        return "Кормить 2 раза в день кормом для взрослых кошек (смешать сухой и мокрый корма)";
+        return "РљРѕСЂРјРёС‚СЊ 2 СЂР°Р·Р° РІ РґРµРЅСЊ РєРѕСЂРјРѕРј РґР»СЏ РІР·СЂРѕСЃР»С‹С… РєРѕС€РµРє (СЃРјРµС€Р°С‚СЊ СЃСѓС…РѕР№ Рё РјРѕРєСЂС‹Р№ РєРѕСЂРјР°)";
     }
 }
 
 string Cat::getTreatmentProtocol() const 
 {
-    string protocol = "Стандартный протокол лечения собак:\n";
-    protocol += "- Ежегодная вакцинация (FVRCP, бешенство)\n";
-    protocol += "- Рекомендовано тестирование на FeLV/FIV\n";
-    protocol += "- Регулярная дегельминтизация каждые 3 месяца\n";
-    protocol += "- Уход за зубами: чистить зубы еженедельно";
+    string protocol = "РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РїСЂРѕС‚РѕРєРѕР» Р»РµС‡РµРЅРёСЏ РєРѕС€РµРє:\n";
+    
+    protocol += "- Р•Р¶РµРіРѕРґРЅР°СЏ РІР°РєС†РёРЅР°С†РёСЏ (FVRCP, Р±РµС€РµРЅСЃС‚РІРѕ)\n";
+    protocol += "- Р РµРєРѕРјРµРЅРґРѕРІР°РЅРѕ С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ РЅР° FeLV/FIV\n";
+    protocol += "- Р РµРіСѓР»СЏСЂРЅР°СЏ РґРµРіРµР»СЊРјРёРЅС‚РёР·Р°С†РёСЏ РєР°Р¶РґС‹Рµ 3 РјРµСЃСЏС†Р°\n";
+    protocol += "- РЈС…РѕРґ Р·Р° Р·СѓР±Р°РјРё: С‡РёСЃС‚РёС‚СЊ Р·СѓР±С‹ РµР¶РµРЅРµРґРµР»СЊРЅРѕ";
 
     return protocol;
 }
@@ -31,5 +50,13 @@ string Cat::getTreatmentProtocol() const
 void Cat::printInfo() const 
 {
     Animal::printInfo();
-    cout << "Приучен к лотку: " << (isLitterTrained ? "Да" : "Нет") << endl;
+    
+    if (isLitterTrained) 
+    {
+        cout << "РџСЂРёСѓС‡РµРЅ Рє Р»РѕС‚РєСѓ: Р”Р°" << endl;
+    }
+    else 
+    {
+        cout << "РџСЂРёСѓС‡РµРЅ Рє Р»РѕС‚РєСѓ: РќРµС‚" << endl;
+    }
 }
