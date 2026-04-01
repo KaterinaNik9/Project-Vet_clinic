@@ -1,32 +1,37 @@
 #pragma once
-//#ifndef CAT_H
-//#define CAT_H
 #include <iostream>
 #include "Animal.h"
+
 using namespace std;
 
 class Cat : public Animal 
 {
 private:
-    bool isLitterTrained; // приучен к лотку
+    bool isLitterTrained;
 
 public:
-    Cat(int id, const string& name, const string& breed, int age, const string& admissionDate, bool isLitterTrained = true);
+    Cat(
+        int id, 
+        const string& name, 
+        const string& breed, 
+        int age, 
+        const string& admissionDate, 
+        bool isLitterTrained = true
+    );
 
-    string getFeedSchedule() const override;// расписание кормления
-    string getTreatmentProtocol() const override;// протокол лечения
+    string getFeedSchedule() const override;
+
+    string getTreatmentProtocol() const override;
+
     void printInfo() const override;
 
-    // Методы для кошек
-    void setIsLitterTrained(bool notTrained) 
+    void setIsLitterTrained(bool trained) 
     { 
-        isLitterTrained = notTrained; 
+        isLitterTrained = trained; 
     }
-    bool isLitterTrained() const 
+
+    bool getIsLitterTrained() const 
     { 
         return isLitterTrained; 
     }
 };
-
-//#endif
-
