@@ -1,9 +1,27 @@
 #include "Animal.h"
 #include <iostream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
-Animal::Animal(int id, const string& name, const string& species, const string& breed, int age, const string& admissionDate)
-    : id(id), name(name), species(species), breed(breed), age(age), admissionDate(admissionDate), isActive(true) {}
+Animal::Animal(
+    int id, 
+    const string& name, 
+    const string& species, 
+    const string& breed, 
+    int age, 
+    const string& admissionDate
+) 
+    : id            (id)
+    , name          (name)
+    , species       (species)
+    , breed         (breed)
+    , age           (age)
+    , admissionDate (admissionDate)
+    , isActive      (true)
+{
+}
 
 void Animal::addMedicalRecord(const MedicalRecord& record) 
 {
@@ -14,28 +32,28 @@ void Animal::printMedicalHistory() const
 {
     if (medicalHistory.empty()) 
     {
-        cout << "Íå íàéäåíî ìåäèöèíñêîé çàïèñè äëÿ " << name << endl;
+        cout << "ÐœÐµÐ´Ð¸Ñ†Ð¸Ð½ÑÐºÐ¸Ðµ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð´Ð»Ñ " << name << " Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ñ‹." << endl;
         return;
     }
 
-    cout << "\nÌåäèöèíñêàÿ èñòîðèÿ äëÿ " << name << " (ID: " << id << "):" << endl;
-    cout << "------------------------------------------------" << endl;
-    for (size_t i = 0; i < medicalHistory.size(); ++i) 
+    cout << "ÐœÐµÐ´Ð¸Ñ†Ð¸Ð½ÑÐºÐ°Ñ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð´Ð»Ñ " << name << " (ID: " << id << "):" << endl;
+
+    for (const auto& record : medicalHistory) 
     {
-        medicalHistory[i].display();// ïðîáëåìà ñ âûâîäîì èñòîðèè
+        record.display(); 
         cout << endl;
     }
 }
 
 void Animal::printInfo() const 
 {
-    cout << "ID: " << id <<endl;
-    cout << "Èìÿ: " << name << endl;
-    cout << "Âèä: " << species << endl;
-    cout << "Ïîðîäà: " << breed << endl;
-    cout << "Âîçðàñò: " << age << " ëåò" << endl;
-    cout << "Äàòà ïðèåìà: " << admissionDate << endl;
-    cout << "Ñòàòóñ: " << (isActive ? "Active" : "Discharged") << endl;
-    cout << "Ðàñïèñàíèå êîðìëåíèÿ: " << getFeedSchedule() << endl;
-    cout << "Ïðîòîêîë ëå÷åíèÿ: " << getTreatmentProtocol() << endl;
+    cout << "ID: " << id << endl;
+    cout << "Ð˜Ð¼Ñ: " << name << endl;
+    cout << "Ð’Ð¸Ð´: " << species << endl;
+    cout << "ÐŸÐ¾Ñ€Ð¾Ð´Ð°: " << breed << endl;
+    cout << "Ð’Ð¾Ð·Ñ€Ð°ÑÑ‚: " << age << " Ð»ÐµÑ‚" << endl;
+    cout << "Ð”Ð°Ñ‚Ð° Ð¿Ñ€Ð¸ÐµÐ¼Ð°: " << admissionDate << endl;
+    cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: " << (isActive ? "Ð›ÐµÑ‡Ð¸Ñ‚ÑÑ" : "Ð’Ñ‹Ð¿Ð¸ÑÐ°Ð½") << endl;
+    cout << "Ð Ð°ÑÐ¿Ð¸ÑÐ°Ð½Ð¸Ðµ ÐºÐ¾Ñ€Ð¼Ð»ÐµÐ½Ð¸Ñ: " << getFeedSchedule() << endl;
+    cout << "ÐŸÑ€Ð¾Ñ‚Ð¾ÐºÐ¾Ð» Ð»ÐµÑ‡ÐµÐ½Ð¸Ñ: " << getTreatmentProtocol() << endl;
 }
