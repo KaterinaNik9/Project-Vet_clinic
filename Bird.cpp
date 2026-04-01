@@ -1,28 +1,47 @@
 #include "Bird.h"
 #include <iostream>
+
 using namespace std;
 
-
-Bird::Bird(int id, const string& name, const string& breed, int age, const string& admissionDate, double wingspan, bool canFly)
-    : Animal(id, name, "Bird", breed, age, admissionDate), wingspan(wingspan), canFly(canFly) {} // проблема с canFly
+Bird::Bird(
+    int id, 
+    const string& name, 
+    const string& breed, 
+    int age, 
+    const string& admissionDate, 
+    double wingspan, 
+    bool canFly
+)
+    : Animal(
+        id, 
+        name, 
+        "Bird", 
+        breed, 
+        age, 
+        admissionDate
+    ), 
+      wingspan(wingspan), 
+      canFly(canFly) 
+{
+}
 
 string Bird::getFeedSchedule() const 
 {
-    return "Кормить ежедневно специализированным зерновым кормом для птиц, свежими фруктами и овощами. "
-        "Воду менять два раза в день.";
+    return "РљРѕСЂРјРёС‚СЊ РµР¶РµРґРЅРµРІРЅРѕ СЃРїРµС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Рј Р·РµСЂРЅРѕРІС‹Рј РєРѕСЂРјРѕРј РґР»СЏ РїС‚РёС†, СЃРІРµР¶РёРјРё С„СЂСѓРєС‚Р°РјРё Рё РѕРІРѕС‰Р°РјРё. Р’РѕРґСѓ РјРµРЅСЏС‚СЊ РґРІР° СЂР°Р·Р° РІ РґРµРЅСЊ.";
 }
 
 string Bird::getTreatmentProtocol() const 
 {
-    string protocol = "Ветеринарный протокол для птиц:\n";
-    protocol += "- Проведение регулярной тримминга крыльев и когтей\n";
-    protocol += "- Ежегодное профилактическое обследование у ветеринара-орнитолога\n";
-    protocol += "- Контроль состояния дыхательной системы\n";
-    protocol += "- Введение в рацион кальциевых добавок";
+    string protocol = "Р’РµС‚РµСЂРёРЅР°СЂРЅС‹Р№ РїСЂРѕС‚РѕРєРѕР» РґР»СЏ РїС‚РёС†:\n";
+    
+    protocol += "- РџСЂРѕРІРµРґРµРЅРёРµ СЂРµРіСѓР»СЏСЂРЅРѕР№ С‚СЂРёРјРјРёРЅРіР° РєСЂС‹Р»СЊРµРІ Рё РєРѕРіС‚РµР№\n";
+    protocol += "- Р•Р¶РµРіРѕРґРЅРѕРµ РїСЂРѕС„РёР»Р°РєС‚РёС‡РµСЃРєРѕРµ РѕР±СЃР»РµРґРѕРІР°РЅРёРµ Сѓ РІРµС‚РµСЂРёРЅР°СЂР°-РѕСЂРЅРёС‚РѕР»РѕРіР°\n";
+    protocol += "- РљРѕРЅС‚СЂРѕР»СЊ СЃРѕСЃС‚РѕСЏРЅРёСЏ РґС‹С…Р°С‚РµР»СЊРЅРѕР№ СЃРёСЃС‚РµРјС‹\n";
+    protocol += "- Р’РІРµРґРµРЅРёРµ РІ СЂР°С†РёРѕРЅ РєР°Р»СЊС†РёРµРІС‹С… РґРѕР±Р°РІРѕРє";
 
     if (!canFly) 
     {
-        protocol += "\n- Для нелетающих птиц требуются особые условия содержания";
+        protocol += "\n- Р”Р»СЏ РЅРµР»РµС‚Р°СЋС‰РёС… РїС‚РёС† С‚СЂРµР±СѓСЋС‚СЃСЏ РѕСЃРѕР±С‹Рµ СѓСЃР»РѕРІРёСЏ СЃРѕРґРµСЂР¶Р°РЅРёСЏ";
     }
 
     return protocol;
@@ -31,6 +50,15 @@ string Bird::getTreatmentProtocol() const
 void Bird::printInfo() const 
 {
     Animal::printInfo();
-    cout << "Размах крыльев: " << wingspan << " см" << endl;
-    cout << "Может летать: " << (canFly ? "Да" : "Нет") << endl;
+    
+    cout << "Р Р°Р·РјР°С… РєСЂС‹Р»СЊРµРІ: " << wingspan << " СЃРј" << endl;
+    
+    if (canFly) 
+    {
+        cout << "РњРѕР¶РµС‚ Р»РµС‚Р°С‚СЊ: Р”Р°" << endl;
+    }
+    else 
+    {
+        cout << "РњРѕР¶РµС‚ Р»РµС‚Р°С‚СЊ: РќРµС‚" << endl;
+    }
 }
