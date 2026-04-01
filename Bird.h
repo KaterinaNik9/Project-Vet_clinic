@@ -1,40 +1,49 @@
 #pragma once
 #include <iostream>
 #include "Animal.h"
-using namespace std;
 
+using namespace std;
 
 class Bird : public Animal 
 {
 private:
-    double wingspan; // размах крыльев
-    bool canFly; // возможность летать
+    double wingspan;
+    bool canFly;
 
 public:
-    Bird(int id, const string& name, const string& breed, int age, const string& admissionDate, double wingspan = 0.0, bool canFly = true);
+    Bird(
+        int id, 
+        const string& name, 
+        const string& breed, 
+        int age, 
+        const string& admissionDate, 
+        double wingspan = 0.0, 
+        bool canFly = true
+    );
 
-    string getFeedSchedule() const override;// расписание кормлени€
-    string getTreatmentProtocol() const override;// протокол лечени€
+    string getFeedSchedule() const override;
+
+    string getTreatmentProtocol() const override;
+
     void printInfo() const override;
 
-    // ћетоды дл€ птиц
     void setWingspan(double ws) 
     {
         wingspan = ws; 
     }
+
     double getWingspan() const 
     { 
         return wingspan; 
     }
-    void canFly()
+
+    void setCanFly(bool status)
     {
-        canFly = false;
+        canFly = status;
     }
-    bool canFly() const
+
+    bool getCanFly() const
     {
         return canFly;
     }
 };
-
-
-
