@@ -3,6 +3,7 @@
 #include <string>
 #include <limits>
 #include <vector>
+#include <clocale>
 
 #include "AnimalHospital.h"
 #include "Dog.h"
@@ -37,6 +38,8 @@ void showMainMenu()
 
 int main() 
 {
+    setlocale(LC_ALL, "Russian");
+
     AnimalHospital hospital;
     int mainChoice = -1;
 
@@ -51,7 +54,7 @@ int main()
             int type, id, age;
             string name, breed, date;
 
-            cout << "Тип (1-Dog, 2-Cat, 3-Bird, 4-Reptile, 5-Exotic): ";
+            cout << "Тип (1-Собака, 2-Кошка, 3-Птица, 4-Рептилия, 5-Экзот): ";
             cin >> type;
             clearInput();
 
@@ -59,7 +62,7 @@ int main()
             cout << "Кличка: "; getline(cin, name);
             cout << "Порода: "; getline(cin, breed);
             cout << "Возраст: "; cin >> age; clearInput();
-            cout << "Дата: "; getline(cin, date);
+            cout << "Дата поступления: "; getline(cin, date);
 
             shared_ptr<Animal> newAnimal = nullptr;
 
@@ -67,13 +70,13 @@ int main()
             else if (type == 2) newAnimal = make_shared<Cat>(id, name, breed, age, date, true);
             else if (type == 3) newAnimal = make_shared<Bird>(id, name, breed, age, date, 30.0, true);
             else if (type == 4) newAnimal = make_shared<Reptile>(id, name, breed, age, date, "Террариум");
-            else if (type == 5) newAnimal = make_shared<ExoticAnimal>(id, name, "Экзот", breed, age, date, "Неизвестно", "NONE");
+            else if (type == 5) newAnimal = make_shared<ExoticAnimal>(id, name, "Экзотическое", breed, age, date, "Неизвестно", "НЕТ");
 
             if (newAnimal) 
             {
                 hospital.addAnimal(newAnimal);
                 
-                cout << "Требуется ли немедленное лечение? (1-Да, 0-Нет): ";
+                cout << "Нужно ли лечение? (1-Да, 0-Нет): ";
                 int needTreatment;
                 cin >> needTreatment;
                 clearInput();
@@ -81,9 +84,9 @@ int main()
                 if (needTreatment == 1) 
                 {
                     string diag;
-                    cout << "Предварительный диагноз: ";
+                    cout << "Диагноз: ";
                     getline(cin, diag);
-                    MedicalRecord initialRecord(date, diag, "Требуется дообследование");
+                    MedicalRecord initialRecord(date, diag, "Требуется наблюдение");
                     initialRecord.setIsActive(true);
                     newAnimal->addMedicalRecord(initialRecord);
                 }
@@ -103,7 +106,7 @@ int main()
             auto animal = hospital.findAnimalById(id);
             if (animal) 
             {
-                cout << "Состояние: 1.Здоров (закрыть карту), 2.Болен (назначить процедуру): ";
+                cout << "Состояние: 1.Здоров, 2.Болен (назначить процедуру): ";
                 int status;
                 cin >> status;
                 clearInput();
@@ -113,7 +116,6 @@ int main()
                     MedicalRecord healthyRecord("2026-04-01", "Здоров", "Осмотрен, жалоб нет");
                     healthyRecord.setIsActive(false);
                     animal->addMedicalRecord(healthyRecord);
-                    cout << "Статус обновлен: Здоров" << endl;
                 }
                 else 
                 {
@@ -124,15 +126,15 @@ int main()
                     MedicalRecord record("2026-04-01", diag, desc);
                     record.setIsActive(true);
 
-                    cout << "Назначить процедуру? (1-Вакцина, 2-Операция, 3-Препарат, 4-Осмотр, 0-Нет): ";
+                    cout << "Процедура (1-Вакцина, 2-Операция, 3-Лекарство, 4-Осмотр, 0-Нет): ";
                     int tType;
                     cin >> tType;
                     clearInput();
 
-                    if (tType == 1) record.addTreatment(make_shared<Vaccination>("Вакцинация", "2026-04-01", 1000, "Биокан", "2027-01-01"));
-                    else if (tType == 2) record.addTreatment(make_shared<Surgery>("Операция", "2026-04-01", 7000, "Срочная", "Высокий"));
-                    else if (tType == 3) record.addTreatment(make_shared<Medication>("Курс лекарств", "2026-04-01", 500, "Антибиотик", "1т/2р в день", 7));
-                    else if (tType == 4) record.addTreatment(make_shared<Examination>("Осмотр", "2026-04-01", 400, "Норма", "Без патологий"));
+                    if (tType == 1) record.addTreatment(make_shared<Vaccination>("Вакцинация", "2026-04-01", 1000.0, "Стандарт", "2027-01-01"));
+                    else if (tType == 2) record.addTreatment(make_shared<Surgery>("Операция", "2026-04-01", 5000.0, "Общая", "Низкий"));
+                    else if (tType == 3) record.addTreatment(make_shared<Medication>("Лекарство", "2026-04-01", 300.0, "Препарат", "1т/день", 5));
+                    else if (tType == 4) record.addTreatment(make_shared<Examination>("Осмотр", "2026-04-01", 500.0, "Норма", "Без рекомендаций"));
 
                     animal->addMedicalRecord(record);
                 }
