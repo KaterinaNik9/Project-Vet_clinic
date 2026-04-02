@@ -60,6 +60,10 @@
 
 ---
 
+<img width="1513" height="884" alt="image" src="https://github.com/user-attachments/assets/9f28691e-06d5-4410-87f2-cecfd25428be" />
+
+
+---
 ## 3. Основной функционал
 
 ### 3.1 Управление животными
