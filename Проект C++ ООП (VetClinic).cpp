@@ -28,13 +28,3 @@
 //___ AnimalHospital.cpp
 //main.cpp
 // Makefile
-#include <iostream>
-
-
-
-int main()
-{
-    setlocale(0, "");
-    
-}
-
