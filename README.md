@@ -55,7 +55,18 @@
 
 ---
 
-![Architecture](https://github.com/user-attachments/assets/2039feec-546f-4138-882d-de3ae9e3cd85)
+<img width="1191" height="586" alt="image" src="https://github.com/user-attachments/assets/1fb3c0c6-f6af-421b-b948-72f434efcbaa" />
+
+
+---
+
+<img width="1692" height="865" alt="image" src="https://github.com/user-attachments/assets/9aca89e3-32bb-4c55-a796-8c03886ed710" />
+
+
+---
+
+<img width="1702" height="704" alt="image" src="https://github.com/user-attachments/assets/22442404-3990-42a3-b8a5-cc15bad17159" />
+
 
 ---
 
