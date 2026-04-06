@@ -1,0 +1,165 @@
+#include <iostream>
+#include <memory>
+#include <string>
+#include <limits>
+#include <vector>
+#include <clocale>
+
+#include "AnimalHospital.h"
+#include "Dog.h"
+#include "Cat.h"
+#include "Bird.h"
+#include "Reptile.h"
+#include "ExoticAnimal.h"
+#include "MedicalRecord.h"
+#include "Vaccination.h"
+#include "Surgery.h"
+#include "Medication.h"
+#include "Examination.h"
+
+using namespace std;
+
+void clearInput() 
+{
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void showMenu() 
+{
+    cout << "\nСИСТЕМА УПРАВЛЕНИЯ КЛИНИКОЙ" << endl;
+    cout << "1. Регистрация нового пациента" << endl;
+    cout << "2. Список всех пациентов и их протоколов" << endl;
+    cout << "3. Назначить специфическое лечение" << endl;
+    cout << "4. Запланировать визит" << endl;
+    cout << "5. Показать график приемов" << endl;
+    cout << "6. Выписать пациента (удалить)" << endl;
+    cout << "0. Выход" << endl;
+    cout << "Выбор: ";
+}
+
+int main() 
+{
+    setlocale(LC_ALL, "Russian");
+    AnimalHospital hospital;
+    int choice = -1;
+
+    while (choice != 0) 
+    {
+        showMenu();
+        cin >> choice;
+        clearInput();
+
+        switch (choice) 
+        {
+            case 1: // Регистрация с учетом особенностей
+            {
+                int type, id, age;
+                string name, breed, date;
+                
+                cout << "Тип: 1-Собака, 2-Кошка, 3-Птица, 4-Рептилия, 5-Экзот: ";
+                cin >> type; clearInput();
+                cout << "ID: "; cin >> id; clearInput();
+                cout << "Кличка: "; getline(cin, name);
+                cout << "Порода: "; getline(cin, breed);
+                cout << "Возраст: "; cin >> age; clearInput();
+                cout << "Дата поступления: "; getline(cin, date);
+
+                shared_ptr<Animal> animal = nullptr;
+
+                if (type == 1) {
+                    animal = make_shared<Dog>(id, name, breed, age, date, true);
+                    cout << "Тип: Собака (протокол: стандартный/кинологический)" << endl;
+                }
+                else if (type == 2) {
+                    animal = make_shared<Cat>(id, name, breed, age, date, true);
+                    cout << "Тип: Кошка (протокол: фелинологический)" << endl;
+                }
+                else if (type == 3) {
+                    double span;
+                    cout << "Размах крыльев (см): "; cin >> span; clearInput();
+                    animal = make_shared<Bird>(id, name, breed, age, date, span, true);
+                }
+                else if (type == 4) {
+                    string habitat;
+                    cout << "Среда обитания (террариум/аквариум): "; getline(cin, habitat);
+                    animal = make_shared<Reptile>(id, name, breed, age, date, habitat);
+                }
+                else if (type == 5) {
+                    animal = make_shared<ExoticAnimal>(id, name, "Экзот", breed, age, date, "Тропики", "REG-99");
+                }
+
+                if (animal) {
+                    hospital.addAnimal(animal);
+                    cout << "Успешно добавлено: " << animal->getName() << endl;
+                }
+                break;
+            }
+
+            case 2: // Вывод с учетом виртуальных функций
+                hospital.printAllAnimals();
+                break;
+
+            case 3: // Специфическое лечение
+            {
+                int id;
+                cout << "Введите ID пациента: "; cin >> id; clearInput();
+                auto a = hospital.findAnimalById(id);
+                if (a) 
+                {
+                    // Демонстрация работы разных протоколов через виртуальные функции
+                    cout << "--- Рекомендации для вида " << a->getName() << " ---" << endl;
+                    cout << "График кормления: " << a->getFeedSchedule() << endl;
+                    cout << "Протокол лечения: " << a->getTreatmentProtocol() << endl;
+
+                    string diag;
+                    cout << "\nНовый диагноз: "; getline(cin, diag);
+                    MedicalRecord record("2026-04-06", diag, "Назначено лечение по протоколу");
+                    record.setIsActive(true);
+
+                    cout << "Тип процедуры: 1-Вакцинация, 2-Хирургия, 3-Препараты: ";
+                    int tType; cin >> tType; clearInput();
+
+                    if (tType == 1) 
+                        record.addTreatment(make_shared<Vaccination>("Вакцина", "2026-04-06", 1200, "Специфическая", "2027-04-06"));
+                    else if (tType == 2) 
+                        record.addTreatment(make_shared<Surgery>("Операция", "2026-04-06", 8000, "Плановая", "Средний"));
+                    else if (tType == 3) 
+                        record.addTreatment(make_shared<Medication>("Курс", "2026-04-06", 600, "Витамины/АБ", "По весу", 10));
+
+                    a->addMedicalRecord(record);
+                    cout << "Медкарта обновлена." << endl;
+                }
+                break;
+            }
+
+            case 4: // Планирование
+            {
+                int id;
+                cout << "ID пациента: "; cin >> id; clearInput();
+                auto a = hospital.findAnimalById(id);
+                if (a) {
+                    string dr, d, t, r;
+                    cout << "Врач-специалист: "; getline(cin, dr);
+                    cout << "Дата: "; getline(cin, d);
+                    cout << "Время: "; getline(cin, t);
+                    cout << "Причина (осмотр/лечение): "; getline(cin, r);
+                    hospital.createAppointment(a, dr, d, t, r);
+                }
+                break;
+            }
+
+            case 5:
+                hospital.printSchedule();
+                break;
+
+            case 6:
+            {
+                int id;
+                cout << "ID для выписки: "; cin >> id;
+                hospital.removeAnimal(id);
+                break;
+            }
+        }
+    }
+    return 0;
+}
