@@ -1,11 +1,11 @@
 #pragma once
-
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
+#include <memory>
+#include "Treatment.h"
 
-class Treatment;
+using namespace std;
 
 class MedicalRecord {
 private:
@@ -20,22 +20,9 @@ public:
 
     void addTreatment(shared_ptr<Treatment> treatment);
     void print() const;
-    string getDate() const 
-    { 
-        return date; 
-    }
-    string getDiagnosis() const 
-    { 
-        return diagnosis; 
-    }
-    bool getIsActive() const 
-    { 
-        return isActive; 
-    }
-    void setIsActive(bool active) 
-    { 
-        isActive = active; 
-    }
+    
+    string getDate() const { return date; }
+    string getDiagnosis() const { return diagnosis; }
+    bool getIsActive() const { return isActive; }
+    void setIsActive(bool active) { isActive = active; }
 };
-
-
